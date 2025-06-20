@@ -232,3 +232,29 @@ export const cancelNavigation = (ros, connected) => {
   publisher.publish(message);
   console.log('Navigation cancelled');
 };
+
+// New function to publish velocity commands
+export const publishCmdVel = (ros, connected, linearX, angularZ) => {
+  if (!ros || !connected) return;
+
+  const cmdVelTopic = new ROSLIB.Topic({
+    ros: ros,
+    name: '/cmd_vel',
+    messageType: 'geometry_msgs/Twist'
+  });
+
+  const twist = new ROSLIB.Message({
+    linear: {
+      x: linearX,
+      y: 0.0,
+      z: 0.0
+    },
+    angular: {
+      x: 0.0,
+      y: 0.0,
+      z: angularZ
+    }
+  });
+
+  cmdVelTopic.publish(twist);
+};
